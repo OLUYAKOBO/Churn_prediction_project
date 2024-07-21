@@ -1,0 +1,128 @@
+import pickle
+import pandas as pd
+import numpy as np
+import streamlit as st
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+
+scaler = pickle.load(open('scal.pkl','rb'))
+model = pickle.load(open('model.pkl','rb'))
+encoder = pickle.load(open('encoder.pkl','rb'))
+
+st.title('*Churn Prediction Application*')
+st.write("*This application predicts whether a customer will churn or not*")
+
+st.header("Enter the customer details here")
+
+def cust_details():
+    
+    c1,c2 = st.columns(2)
+    Surname = st.text_input("What is your name?")
+    with c1:
+        CreditScore = st.number_input("Input your credit score",350,1000,430)
+        Geography = st.selectbox("Select the country you are from",(['Spain','France','Germany']))
+        Gender = st.selectbox("Select your gender below",(['Male','Female']))
+        Age = st.number_input("Please enter your age",18,100,91)
+        Tenure = st.number_input("Please enter how long you have been a customer",0,12,8)
+    with c2:
+        Balance = st.number_input("Enter your balance",0.0, 300000.0,462.3)
+        NumOfProducts = st.number_input("Enter the number of products purchased",1,4,2)
+        HasCrCard = st.selectbox("Do you own a credit card?",(['Yes','No']))
+        IsActiveMember = st.selectbox("Are you an active member?",(['Yes','No']))
+        EstimatedSalary = st.number_input("Enter your salary below",0.0,200000.0,1300.5)
+        
+        
+    feat = np.array([CreditScore,
+                     Geography,
+                     Gender,
+                     Age,
+                     Tenure,
+                     Balance,
+                     NumOfProducts,
+                     HasCrCard,
+                     IsActiveMember,
+                     EstimatedSalary]).reshape(1,-1)
+    cols = ['CreditScore',
+            'Geography',
+            'Gender',
+            'Age',
+            'Tenure',
+            'Balance',
+            'NumOfProducts',
+            'HasCrCard',
+            'IsActiveMember',
+            'EstimatedSalary']
+    
+    df = pd.DataFrame(feat, columns = cols)
+    return df
+df = cust_details()
+
+st.write(df)
+            
+
+df.replace({'Yes':1,
+            'No':0},inplace = True)
+#st.write(df)
+
+
+#feature engineering
+df['EstimatedSalary'] = pd.to_numeric(df['EstimatedSalary'], errors='coerce')
+df['Balance'] = pd.to_numeric(df['Balance'], errors='coerce')
+df['Age'] = pd.to_numeric(df['Age'], errors='coerce')
+df['Tenure'] = pd.to_numeric(df['Tenure'], errors='coerce')
+df['CreditScore'] = pd.to_numeric(df['CreditScore'], errors = 'coerce')
+df['NumOfProducts'] = pd.to_numeric(df['NumOfProducts'], errors = 'coerce')
+            
+        
+df['salary_per_credit'] = df.EstimatedSalary/df.CreditScore
+df['salary_per_age'] = df.EstimatedSalary/df.Age
+df['salary_per_products'] = df.EstimatedSalary/df.NumOfProducts
+df['credit_per_age'] = df.CreditScore/df.Age
+df['products_per_age'] = df.NumOfProducts/df.Age
+df['credit_per_product']= df.CreditScore/df.NumOfProducts
+df['Balance_per_age'] = df.Balance/df.Age
+df['balance_and_age'] = df.Balance*df.Age
+df['salary_and_age'] = df.EstimatedSalary*df.Age
+df['credit_and_age'] = df.CreditScore*df.Age
+df['salary_and_products'] = df.EstimatedSalary*df.NumOfProducts
+#st.write(df)
+
+def preprocessing(df):
+    enc_data =pd.DataFrame(encoder.transform(df[['Geography','Gender']]))#.toarray())
+    #enc_data.columns = encoder.get_feature_names_out()
+    enc_data.columns = encoder.get_feature_names_out(['Geography','Gender'])
+    df = df.join(enc_data)
+
+    df.drop(['Gender','Geography'],
+           axis=1,
+           inplace = True)
+    
+    cols = df.columns
+    df = scaler.transform(df)
+    df = pd.DataFrame(df,columns=cols)
+    return df
+df = preprocessing(df)
+st.write(df)
+
+prediction = model.predict(df)
+
+st.subheader('*Churn Prediction*')
+
+import time
+
+if st.button('*Click here to get your churn prediction*'):
+    time.sleep(10)
+    with st.spinner('Predicting... Please wait...'):
+        if prediction == 0:
+            st.success("This customer will not churn")
+        else:
+            st.success("This customer will churn")
+    
+        
+        
+        
+        
+        
+        
+        
+        
