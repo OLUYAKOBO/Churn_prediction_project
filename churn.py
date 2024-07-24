@@ -1,9 +1,22 @@
+#try:
+    #from numpy.core.numeric import ComplexWarning
+#except ImportError:
+    #class ComplexWarning(Warning):
+        #pass
+
 import pickle
 import pandas as pd
 import numpy as np
 import streamlit as st
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler
+#from numpy.core.numeric import ComplexWarning
+#try:
+    #from numpy.core.numeric import ComplexWarning
+#except ImportError:
+    #class ComplexWarning(Warning):
+       # pass
+
 
 scaler = pickle.load(open('scal.pkl','rb'))
 model = pickle.load(open('model.pkl','rb'))
@@ -87,24 +100,27 @@ df['credit_and_age'] = df.CreditScore*df.Age
 df['salary_and_products'] = df.EstimatedSalary*df.NumOfProducts
 #st.write(df)
 
-def preprocessing(df):
-    enc_data =pd.DataFrame(encoder.transform(df[['Geography','Gender']]))#.toarray())
-    #enc_data.columns = encoder.get_feature_names_out()
-    enc_data.columns = encoder.get_feature_names_out(['Geography','Gender'])
-    df = df.join(enc_data)
+def preprocessing():
+    df1 = df.copy()
+    cat_cols = ['Geography','Gender']
+    encoded_data = encoder.transform(df1[cat_cols])
+    dense_data = encoded_data.todense()
+    df1_encoded = pd.DataFrame(dense_data, columns = encoder.get_feature_names_out())
 
-    df.drop(['Gender','Geography'],
-           axis=1,
-           inplace = True)
+    df1 = pd.concat([df1,df1_encoded],
+                    axis = 1)
+    df1.drop(cat_cols,
+             axis = 1,
+             inplace = True)
     
-    cols = df.columns
-    df = scaler.transform(df)
-    df = pd.DataFrame(df,columns=cols)
-    return df
-df = preprocessing(df)
-st.write(df)
+    cols = df1.columns
+    df1 = scaler.transform(df1)
+    df1 = pd.DataFrame(df1,columns=cols)
+    return df1
+df1 = preprocessing()
+st.write(df1)
 
-prediction = model.predict(df)
+prediction = model.predict(df1)
 
 st.subheader('*Churn Prediction*')
 
