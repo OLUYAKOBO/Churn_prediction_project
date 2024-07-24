@@ -70,7 +70,7 @@ def cust_details():
     return df
 df = cust_details()
 
-#st.write(df)
+st.write(df)
             
 
 df.replace({'Yes':1,
@@ -118,7 +118,7 @@ def preprocessing():
     df1 = pd.DataFrame(df1,columns=cols)
     return df1
 df1 = preprocessing()
-#st.write(df1)
+st.write(df1)
 
 prediction = model.predict(df1)
 
