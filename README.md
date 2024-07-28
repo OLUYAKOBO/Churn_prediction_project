@@ -8,11 +8,12 @@ Through detailed data analysis and modeling, we provide actionable insights into
 
 **Project Highlights**
 
-* Data Analysis: Conducted comprehensive exploratory data analysis to uncover patterns and correlations related to customer churn.
-* Feature Engineering: Developed innovative features that capture customer behavior and demographic information to enhance model accuracy.
-* Modeling: Experimented with various machine learning algorithms, including Logistic Regression, Random Forest, and Gradient Boosting, to find the most effective model.
-* Evaluation: Utilized key metrics like accuracy, precision, recall, and AUC-ROC to rigorously evaluate model performance.
-* Interpretation: Offered a detailed interpretation of model results, highlighting the most influential factors driving customer churn.
+* **Data Analysis**: Conducted comprehensive exploratory data analysis to uncover patterns and correlations related to customer churn.
+* **Feature Engineering**: Developed innovative features that capture customer behavior and demographic information to enhance model accuracy.
+* **Modeling**: Experimented with various machine learning algorithms, including Logistic Regression, Random Forest, and Gradient Boosting, to find the most effective model.
+* **Evaluation**: Utilized key metrics like accuracy, precision, recall, and AUC-ROC to rigorously evaluate model performance.
+* **Interpretation**: Offered a detailed interpretation of model results, highlighting the most influential factors driving customer churn.
+* **Model Deployment**: The model was further deployed into a web application to make it user-friendly.
 
 **Dataset**
 
