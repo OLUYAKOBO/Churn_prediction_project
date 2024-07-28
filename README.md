@@ -25,6 +25,8 @@ It serves as the foundation for training and validating the churn prediction mod
 The analysis revealed that credit card status and tenure are significant predictors of customer churn. 
 The best-performing model achieved a high AUC-ROC score, indicating strong predictive capability.
 For a deeper dive into the findings and methodology, refer to the detailed report available in the repository.
+The model was deployed in a web application, in order to make it user-friendly.
+This is the link to the web application: https://churnpredictionproject-s4qfpjvrbrphowbr8sjchu.streamlit.app/
 
 **Contributing**
 
